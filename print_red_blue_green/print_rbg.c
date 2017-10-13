@@ -36,7 +36,7 @@ int pc = 0;                         /* # printing counter */
 int ni = 0;                         /* # number of iterations */
 
 void *print_color(int *id);
-void do_print(int *id);
+void do_print(int *id, int inner_pc);
 
 /* --- Program - definition - end */
 
@@ -100,7 +100,7 @@ void *print_color(int *id) {
     		int seconds = random() % 10;
     		printf("%d:sleeping %d seconds\n", inner_pc, seconds);
     		sleep(seconds);
-    		do_print(id);
+    		do_print(id, inner_pc);
     		i++;
     		up(print_mutex);
     	} else {
@@ -109,13 +109,13 @@ void *print_color(int *id) {
     }
 }
 
-void do_print(int *id) {
+void do_print(int *id, int inner_pc) {
     if (*id == 0) {
-    	printf("%d:\033[31mvermelho\033[0m\n", pc);
+    	printf("%d:%d:\033[31mvermelho\033[0m\n", *id, inner_pc);
     } else if (*id == 1) {
-    	printf("%d:\033[34mazul\033[0m\n", pc);
+    	printf("%d:%d:\033[34mazul\033[0m\n", *id, inner_pc);
     } else {
-    	printf("%d:\033[32mverde\033[0m\n", pc);
+    	printf("%d:%d:\033[32mverde\033[0m\n", *id, inner_pc);
     }
 }
 
@@ -140,7 +140,7 @@ void semaphore_close(sem_t *sem) {
 
 void semaphore_unlink(char *name) {
     if (sem_unlink(name) == -1) {
-        perror("sem_unlink");
+        /*perror("sem_unlink");*/
         /*do_error("Error in semaphore_unlink!");*/
     }
 }
