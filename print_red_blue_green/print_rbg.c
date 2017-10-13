@@ -87,16 +87,18 @@ int main(int argc, char *argv[]) {
 }
 
 void *print_color(int *id) {
+    int inner_pc = 0;
 	printf("begin thread:ID: %d\n", *id);
     int i = 0;
     while (i < ni) {    			    /* repeat n times */
     	down(round_mutex);
     	if ((pc % 3) == *id) {
+            inner_pc = pc;
     		pc++;
     		down(print_mutex);
     		up(round_mutex);
     		int seconds = random() % 10;
-    		printf("%d:sleeping %d seconds\n", pc, seconds);
+    		printf("%d:sleeping %d seconds\n", inner_pc, seconds);
     		sleep(seconds);
     		do_print(id);
     		i++;
